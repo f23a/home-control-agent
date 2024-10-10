@@ -119,27 +119,7 @@ final class ViewModel {
         }
     }
 
-    var menuBarUpdateDate = Date()
-    var menuBarUpdateTitle: String? {
-        guard let latestInverterReading else {
-            return "Updated: Never"
-        }
-
-        let age = Date().timeIntervalSince(latestInverterReading.reading.readingAt)
-        if age < 3 {
-            return "Updated: Now"
-        } else {
-            let formatter = RelativeDateTimeFormatter()
-            formatter.formattingContext = .standalone
-            formatter.dateTimeStyle = .named
-            formatter.unitsStyle = .abbreviated
-            let relativeString = formatter.localizedString(
-                for: latestInverterReading.reading.readingAt,
-                relativeTo: menuBarUpdateDate
-            )
-            return "Updated: \(relativeString)"
-        }
-    }
+    var menuBarUpdateTitle: String?
 
     init() {
         client = .localhost
@@ -169,7 +149,25 @@ final class ViewModel {
     // MARK: - @objc private
 
     @objc private func fireUpdateTimer() {
-        menuBarUpdateDate = Date()
+        guard let latestInverterReading else {
+            menuBarUpdateTitle = "Updated: Never"
+            return
+        }
+
+        let age = Date().timeIntervalSince(latestInverterReading.reading.readingAt)
+        if age < 3 {
+            menuBarUpdateTitle = "Updated: Now"
+        } else {
+            let formatter = RelativeDateTimeFormatter()
+            formatter.formattingContext = .standalone
+            formatter.dateTimeStyle = .named
+            formatter.unitsStyle = .abbreviated
+            let relativeString = formatter.localizedString(
+                for: latestInverterReading.reading.readingAt,
+                relativeTo: Date()
+            )
+            menuBarUpdateTitle = "Updated: \(relativeString)"
+        }
     }
 
     @objc private func fireRepairWebSocketTimer() {
