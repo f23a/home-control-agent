@@ -26,14 +26,14 @@ final class ViewModel {
     private var webSocketStream: SocketStream?
     private var webSocketSettings = WebSocketSettings.default
 
-    private(set) var latestInverterReading: StoredInverterReading?
+    private(set) var latestInverterReading: Stored<InverterReading>?
 
     var menuBarImage: Image? {
         guard let latestInverterReading else { return nil }
 
         switch titleMode {
         case .solarPower:
-            if latestInverterReading.reading.fromSolar > 4000 {
+            if latestInverterReading.value.fromSolar > 4000 {
                 return .init(systemName: "sun.max")
             } else {
                 return .init(systemName: "sun.min")
@@ -41,10 +41,10 @@ final class ViewModel {
         case .loadPower:
             return .init(systemName: "house")
         case .batteryPower, .batteryLevel:
-            if latestInverterReading.reading.isCharging {
+            if latestInverterReading.value.isCharging {
                 return .init(systemName: "battery.100percent.bolt")
             } else {
-                switch latestInverterReading.reading.batteryLevel {
+                switch latestInverterReading.value.batteryLevel {
                 case 0..<0.125:
                     return .init(systemName: "battery.0percent")
                 case 0.125..<0.375:
@@ -69,53 +69,53 @@ final class ViewModel {
 
         switch titleMode {
         case .solarPower:
-            return latestInverterReading.reading.formatted(\.fromSolar, options: .short)
+            return latestInverterReading.value.formatted(\.fromSolar, options: .short)
         case .loadPower:
-            return latestInverterReading.reading.formatted(\.toLoad, options: .short)
+            return latestInverterReading.value.formatted(\.toLoad, options: .short)
         case .batteryPower:
-            return latestInverterReading.reading.formatted(\.fromBattery, options: .short)
+            return latestInverterReading.value.formatted(\.fromBattery, options: .short)
         case .batteryLevel:
-            return latestInverterReading.reading.formatted(\.batteryLevel, options: .short)
+            return latestInverterReading.value.formatted(\.batteryLevel, options: .short)
         case .gridPower:
-            return latestInverterReading.reading.formatted(\.fromGrid, options: .short)
+            return latestInverterReading.value.formatted(\.fromGrid, options: .short)
         }
     }
 
     var menuBarLoadPowerTitle: String? {
         guard let latestInverterReading else { return nil }
 
-        return "Load: \(latestInverterReading.reading.formatted(\.toLoad))"
+        return "Load: \(latestInverterReading.value.formatted(\.toLoad))"
     }
 
     var menuBarSolarPowerTitle: String? {
         guard let latestInverterReading else { return nil }
 
-        return "Solar: \(latestInverterReading.reading.formatted(\.fromSolar))"
+        return "Solar: \(latestInverterReading.value.formatted(\.fromSolar))"
     }
 
     var menuBarBatteryPowerTitle: String? {
         guard let latestInverterReading else { return nil }
 
-        if latestInverterReading.reading.isCharging {
-            return "To Battery: \(latestInverterReading.reading.formatted(\.toBattery))"
+        if latestInverterReading.value.isCharging {
+            return "To Battery: \(latestInverterReading.value.formatted(\.toBattery))"
         } else {
-            return "From Battery: \(latestInverterReading.reading.formatted(\.fromBattery))"
+            return "From Battery: \(latestInverterReading.value.formatted(\.fromBattery))"
         }
     }
 
     var menuBarBatteryLevelTitle: String? {
         guard let latestInverterReading else { return nil }
 
-        return "Battery Level: \(latestInverterReading.reading.formatted(\.batteryLevel))"
+        return "Battery Level: \(latestInverterReading.value.formatted(\.batteryLevel))"
     }
 
     var menuBarGridPowerTitle: String? {
         guard let latestInverterReading else { return nil }
 
-        if latestInverterReading.reading.toGrid > latestInverterReading.reading.fromGrid {
-            return "To Grid: \(latestInverterReading.reading.formatted(\.toGrid))"
+        if latestInverterReading.value.toGrid > latestInverterReading.value.fromGrid {
+            return "To Grid: \(latestInverterReading.value.formatted(\.toGrid))"
         } else {
-            return "From Grid: \(latestInverterReading.reading.formatted(\.fromGrid))"
+            return "From Grid: \(latestInverterReading.value.formatted(\.fromGrid))"
         }
     }
 
@@ -154,7 +154,7 @@ final class ViewModel {
             return
         }
 
-        let age = Date().timeIntervalSince(latestInverterReading.reading.readingAt)
+        let age = Date().timeIntervalSince(latestInverterReading.value.readingAt)
         if age < 3 {
             menuBarUpdateTitle = "Updated: Now"
         } else {
@@ -163,7 +163,7 @@ final class ViewModel {
             formatter.dateTimeStyle = .named
             formatter.unitsStyle = .abbreviated
             let relativeString = formatter.localizedString(
-                for: latestInverterReading.reading.readingAt,
+                for: latestInverterReading.value.readingAt,
                 relativeTo: Date()
             )
             menuBarUpdateTitle = "Updated: \(relativeString)"
