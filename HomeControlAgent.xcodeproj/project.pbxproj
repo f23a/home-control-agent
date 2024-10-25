@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		6435F94B2CAD95C10052FB80 /* HomeControlClient in Frameworks */ = {isa = PBXBuildFile; productRef = 6435F94A2CAD95C10052FB80 /* HomeControlClient */; };
-		645C29282CC18E3D009CF49C /* HomeControlClient in Frameworks */ = {isa = PBXBuildFile; productRef = 645C29272CC18E3D009CF49C /* HomeControlClient */; };
+		64C0FCAD2CCACCB400F1D13A /* HomeControlClient in Frameworks */ = {isa = PBXBuildFile; productRef = 64C0FCAC2CCACCB400F1D13A /* HomeControlClient */; };
+		64C0FCE52CCC21A700F1D13A /* HomeControlClient in Frameworks */ = {isa = PBXBuildFile; productRef = 64C0FCE42CCC21A700F1D13A /* HomeControlClient */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,8 +29,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				645C29282CC18E3D009CF49C /* HomeControlClient in Frameworks */,
+				64C0FCAD2CCACCB400F1D13A /* HomeControlClient in Frameworks */,
 				6435F94B2CAD95C10052FB80 /* HomeControlClient in Frameworks */,
+				64C0FCE52CCC21A700F1D13A /* HomeControlClient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,7 +84,8 @@
 			name = HomeControlAgent;
 			packageProductDependencies = (
 				6435F94A2CAD95C10052FB80 /* HomeControlClient */,
-				645C29272CC18E3D009CF49C /* HomeControlClient */,
+				64C0FCAC2CCACCB400F1D13A /* HomeControlClient */,
+				64C0FCE42CCC21A700F1D13A /* HomeControlClient */,
 			);
 			productName = HomeControlAgent;
 			productReference = 6435F9002CAD8B440052FB80 /* HomeControlAgent.app */;
@@ -113,7 +116,7 @@
 			mainGroup = 6435F8F72CAD8B440052FB80;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				645C29262CC18E3D009CF49C /* XCRemoteSwiftPackageReference "home-control-client" */,
+				64C0FCE32CCC21A700F1D13A /* XCRemoteSwiftPackageReference "home-control-client" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6435F9012CAD8B440052FB80 /* Products */;
@@ -368,12 +371,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		645C29262CC18E3D009CF49C /* XCRemoteSwiftPackageReference "home-control-client" */ = {
+		64C0FCE32CCC21A700F1D13A /* XCRemoteSwiftPackageReference "home-control-client" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/f23a/home-control-client.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.1;
+				minimumVersion = 1.2.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -383,9 +386,13 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = HomeControlClient;
 		};
-		645C29272CC18E3D009CF49C /* HomeControlClient */ = {
+		64C0FCAC2CCACCB400F1D13A /* HomeControlClient */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 645C29262CC18E3D009CF49C /* XCRemoteSwiftPackageReference "home-control-client" */;
+			productName = HomeControlClient;
+		};
+		64C0FCE42CCC21A700F1D13A /* HomeControlClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 64C0FCE32CCC21A700F1D13A /* XCRemoteSwiftPackageReference "home-control-client" */;
 			productName = HomeControlClient;
 		};
 /* End XCSwiftPackageProductDependency section */

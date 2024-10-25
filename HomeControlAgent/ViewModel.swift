@@ -18,13 +18,9 @@ final class ViewModel {
     }
 
     private var updateTimer: Timer?
-    private var repairWebSocketTimer: Timer?
 
     private var client: HomeControlClient
-    private var cancellables = Set<AnyCancellable>()
-    private var webSocketID: UUID?
-    private var webSocketStream: SocketStream?
-    private var webSocketSettings = WebSocketSettings.default
+    private var websocket: HomeControlWebSocket
 
     private(set) var latestInverterReading: Stored<InverterReading>?
 
@@ -122,8 +118,11 @@ final class ViewModel {
     var menuBarUpdateTitle: String?
 
     init() {
-        client = .localhost
-        client.authToken = Environment.require("AUTH_TOKEN")
+        var client = HomeControlClient.localhost
+        client.authToken = DotEnv.require("AUTH_TOKEN")
+        self.client = client
+        self.websocket = .init(client: client)
+        self.websocket.delegate = self
 
         updateTimer = .scheduledTimer(
             timeInterval: 2,
@@ -134,14 +133,6 @@ final class ViewModel {
         )
         RunLoop.main.add(updateTimer!, forMode: .common)
         fireUpdateTimer()
-
-        repairWebSocketTimer = .scheduledTimer(
-            timeInterval: 1,
-            target: self,
-            selector: #selector(fireRepairWebSocketTimer),
-            userInfo: nil,
-            repeats: true
-        )
 
         updateLatestInverterReading()
     }
@@ -170,50 +161,8 @@ final class ViewModel {
         }
     }
 
-    @objc private func fireRepairWebSocketTimer() {
-        guard webSocketStream == nil else { return }
-        initializeWebSocket()
-    }
-
     @objc private func closeApplication() {
         NSApplication.shared.terminate(nil)
-    }
-
-    // MARK: - WebSocket
-
-    private func initializeWebSocket() {
-        self.webSocketStream = client.webSocket.socketStream()
-        if let webSocketStream {
-            Task {
-                do {
-                    for try await message in webSocketStream {
-                        guard let webSocketMessage = message.webSocketMessage else {
-                            print("Unable to handle message \(message)")
-                            continue
-                        }
-
-                        switch webSocketMessage {
-                        case let didRegister as WebSocketDidRegisterMessage:
-                            self.webSocketID = didRegister.content.id
-                            self.sendWebSocketSettings(webSocketSettings)
-                        case let didCreateInverterReading as WebSocketDidCreateInverterReadingMessage:
-                            await MainActor.run {
-                                latestInverterReading = didCreateInverterReading.content.inverterReading
-                            }
-                        case is WebSocketPingMessage:
-                            break
-                        default:
-                            print("Unknown websocket message \(webSocketMessage.identifier)")
-                        }
-                    }
-                } catch {
-                    print("Failed message \(error)")
-                }
-
-                self.webSocketStream = nil
-                self.webSocketID = nil
-            }
-        }
     }
 
     private func updateLatestInverterReading() {
@@ -224,15 +173,20 @@ final class ViewModel {
             }
         }
     }
+}
 
-    private func sendWebSocketSettings(_ settings: WebSocketSettings) {
-        guard let webSocketID else { return }
-        Task { @MainActor in
-            do {
-                try await client.webSocket.update(settings: settings, for: webSocketID)
-            } catch {
-                print("Failed to update settings")
-            }
-        }
+extension ViewModel: @preconcurrency HomeControlWebSocketDelegate {
+    func homeControlWebSocket(
+        _ homeControlWebSocket: HomeControlWebSocket,
+        didCreateInverterReading inverterReading: Stored<InverterReading>
+    ) {
+        latestInverterReading = inverterReading
+    }
+
+    func homeControlWebSocket(
+        _ homeControlWebSocket: HomeControlWebSocket,
+        didSaveSetting setting: HomeControlKit.Setting
+    ) {
+        print("WS Settings")
     }
 }
