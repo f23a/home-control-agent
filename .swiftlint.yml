@@ -50,3 +50,11 @@ type_name:
 type_body_length:
   warning: 250
   error: 400
+
+custom_rules:
+  disable_print:
+    included: ".*\\.swift"
+    name: "Print Usage"
+    regex: "((\\bprint)|(Swift\\.print))\\s*\\("
+    message: "Prefer Logger over print"
+    severity: warning
