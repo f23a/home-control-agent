@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		6435F94B2CAD95C10052FB80 /* HomeControlClient in Frameworks */ = {isa = PBXBuildFile; productRef = 6435F94A2CAD95C10052FB80 /* HomeControlClient */; };
 		64C0FCAD2CCACCB400F1D13A /* HomeControlClient in Frameworks */ = {isa = PBXBuildFile; productRef = 64C0FCAC2CCACCB400F1D13A /* HomeControlClient */; };
-		64C0FCE52CCC21A700F1D13A /* HomeControlClient in Frameworks */ = {isa = PBXBuildFile; productRef = 64C0FCE42CCC21A700F1D13A /* HomeControlClient */; };
 		64C0FD342CCD6B7400F1D13A /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = 64C0FD332CCD6B7400F1D13A /* Logging */; };
+		64D9DC972CE53F7600E5CD14 /* HomeControlShared in Frameworks */ = {isa = PBXBuildFile; productRef = 64D9DC962CE53F7600E5CD14 /* HomeControlShared */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,8 +32,8 @@
 			files = (
 				64C0FCAD2CCACCB400F1D13A /* HomeControlClient in Frameworks */,
 				6435F94B2CAD95C10052FB80 /* HomeControlClient in Frameworks */,
+				64D9DC972CE53F7600E5CD14 /* HomeControlShared in Frameworks */,
 				64C0FD342CCD6B7400F1D13A /* Logging in Frameworks */,
-				64C0FCE52CCC21A700F1D13A /* HomeControlClient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,8 +87,8 @@
 			packageProductDependencies = (
 				6435F94A2CAD95C10052FB80 /* HomeControlClient */,
 				64C0FCAC2CCACCB400F1D13A /* HomeControlClient */,
-				64C0FCE42CCC21A700F1D13A /* HomeControlClient */,
 				64C0FD332CCD6B7400F1D13A /* Logging */,
+				64D9DC962CE53F7600E5CD14 /* HomeControlShared */,
 			);
 			productName = HomeControlAgent;
 			productReference = 6435F9002CAD8B440052FB80 /* HomeControlAgent.app */;
@@ -119,8 +119,8 @@
 			mainGroup = 6435F8F72CAD8B440052FB80;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				64C0FCE32CCC21A700F1D13A /* XCRemoteSwiftPackageReference "home-control-client" */,
 				64C0FD322CCD6B7400F1D13A /* XCRemoteSwiftPackageReference "swift-log" */,
+				64D9DC952CE53F7600E5CD14 /* XCLocalSwiftPackageReference "HomeControlShared" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6435F9012CAD8B440052FB80 /* Products */;
@@ -374,15 +374,14 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		64C0FCE32CCC21A700F1D13A /* XCRemoteSwiftPackageReference "home-control-client" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/f23a/home-control-client.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.2.0;
-			};
+/* Begin XCLocalSwiftPackageReference section */
+		64D9DC952CE53F7600E5CD14 /* XCLocalSwiftPackageReference "HomeControlShared" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = HomeControlShared;
 		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
 		64C0FD322CCD6B7400F1D13A /* XCRemoteSwiftPackageReference "swift-log" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-log.git";
@@ -402,15 +401,14 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = HomeControlClient;
 		};
-		64C0FCE42CCC21A700F1D13A /* HomeControlClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 64C0FCE32CCC21A700F1D13A /* XCRemoteSwiftPackageReference "home-control-client" */;
-			productName = HomeControlClient;
-		};
 		64C0FD332CCD6B7400F1D13A /* Logging */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 64C0FD322CCD6B7400F1D13A /* XCRemoteSwiftPackageReference "swift-log" */;
 			productName = Logging;
+		};
+		64D9DC962CE53F7600E5CD14 /* HomeControlShared */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HomeControlShared;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

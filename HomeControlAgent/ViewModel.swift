@@ -8,11 +8,15 @@
 import Combine
 import HomeControlClient
 import HomeControlKit
+import HomeControlLogging
+import Logging
 import SwiftUI
 
 @Observable
 @MainActor
 final class ViewModel {
+    private let logger = Logger(homeControl: "agent.view-model")
+
     var titleMode = TitleMode.solarPower {
         didSet { fireUpdateTimer() }
     }
@@ -118,8 +122,12 @@ final class ViewModel {
     var menuBarUpdateTitle: String?
 
     init() {
-        var client = HomeControlClient.localhost
-        client.authToken = DotEnv.require("AUTH_TOKEN")
+        LoggingSystem.bootstrapHomeControl()
+
+        // swiftlint:disable:next force_try
+        let ip = try! DotEnv.fromMainBundle().require("MAC_MINI_IP")
+        var client = HomeControlClient(host: ip, port: 8080)!
+        client.authToken = try? DotEnv.fromMainBundle().require("PROD_AUTH_TOKEN")
         self.client = client
         self.websocket = .init(client: client)
         self.websocket.delegate = self
@@ -187,6 +195,6 @@ extension ViewModel: @preconcurrency HomeControlWebSocketDelegate {
         _ homeControlWebSocket: HomeControlWebSocket,
         didSaveSetting setting: HomeControlKit.Setting
     ) {
-        print("WS Settings")
+        logger.info("Did save setting \(setting)")
     }
 }
